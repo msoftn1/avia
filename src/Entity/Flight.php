@@ -50,11 +50,25 @@ class Flight
     private $isSalesCompleted = false;
 
     /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="completion_at", type="datetime", nullable=true)
+     */
+    private $completionAt;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="is_canceled", type="boolean", nullable=false)
      */
     private $isCanceled = false;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="cancellation_at", type="datetime", nullable=true)
+     */
+    private $cancellationAt;
 
     public function getId(): ?int
     {
@@ -109,6 +123,18 @@ class Flight
         return $this;
     }
 
+    public function getCompletionAt(): ?\DateTimeInterface
+    {
+        return $this->completionAt;
+    }
+
+    public function setCompletionAt(?\DateTimeInterface $completionAt): self
+    {
+        $this->completionAt = $completionAt;
+
+        return $this;
+    }
+
     public function getIsCanceled(): ?bool
     {
         return $this->isCanceled;
@@ -117,6 +143,18 @@ class Flight
     public function setIsCanceled(bool $isCanceled): self
     {
         $this->isCanceled = $isCanceled;
+
+        return $this;
+    }
+
+    public function getCancellationAt(): ?\DateTimeInterface
+    {
+        return $this->cancellationAt;
+    }
+
+    public function setCancellationAt(?\DateTimeInterface $cancellationAt): self
+    {
+        $this->cancellationAt = $cancellationAt;
 
         return $this;
     }

@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Reservation
  *
- * @ORM\Table(name="reservation", indexes={@ORM\Index(name="reservation_flight_id_index", columns={"flight_id"}), @ORM\Index(name="reservation_number_index", columns={"number"})})
+ * @ORM\Table(name="reservation", uniqueConstraints={@ORM\UniqueConstraint(name="reservation_seat_number_unique_index", columns={"number", "seat"})}, indexes={@ORM\Index(name="reservation_flight_id_index", columns={"flight_id"}), @ORM\Index(name="reservation_number_index", columns={"number"})})
  * @ORM\Entity
  */
 class Reservation
@@ -24,7 +25,7 @@ class Reservation
     /**
      * @var int
      *
-     * @ORM\Column(name="number", type="integer", nullable=false)
+     * @ORM\Column(name="number", type="string", length=10, nullable=false)
      */
     private $number;
 
@@ -80,17 +81,22 @@ class Reservation
      */
     private $flight;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Purchase", mappedBy="reservation")
+     */
+    private $purchases;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNumber(): ?int
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    public function setNumber(int $number): self
+    public function setNumber(string $number): self
     {
         $this->number = $number;
 
@@ -181,5 +187,11 @@ class Reservation
         return $this;
     }
 
-
+    /**
+     * @return ArrayCollection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
 }

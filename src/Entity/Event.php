@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
+    const EVENT_TYPE_COMPLETED = 1;
+    const EVENT_TYPE_CANCELED = 2;
+
     /**
      * @var int
      *
@@ -31,7 +34,7 @@ class Event
     /**
      * @var bool
      *
-     * @ORM\Column(name="type", type="boolean", nullable=false)
+     * @ORM\Column(name="type", type="integer", nullable=false)
      */
     private $type;
 
@@ -69,12 +72,12 @@ class Event
         return $this;
     }
 
-    public function getType(): ?bool
+    public function getType(): int
     {
         return $this->type;
     }
 
-    public function setType(bool $type): self
+    public function setType(int $type): self
     {
         $this->type = $type;
 

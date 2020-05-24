@@ -59,9 +59,9 @@ class Notification
     /**
      * @var bool|null
      *
-     * @ORM\Column(name="count_attempts", type="boolean", nullable=true)
+     * @ORM\Column(name="count_attempts", type="int", nullable=true)
      */
-    private $countAttempts = false;
+    private $countAttempts = 0;
 
     /**
      * @var \Event
@@ -148,12 +148,12 @@ class Notification
         return $this;
     }
 
-    public function getCountAttempts(): ?bool
+    public function getCountAttempts()
     {
         return $this->countAttempts;
     }
 
-    public function setCountAttempts(?bool $countAttempts): self
+    public function setCountAttempts($countAttempts): self
     {
         $this->countAttempts = $countAttempts;
 

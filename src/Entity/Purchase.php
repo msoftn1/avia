@@ -22,9 +22,16 @@ class Purchase
     private $id;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="purchase_at", type="datetime", nullable=false)
+     */
+    private $purchaseAt;
+
+    /**
      * @var int
      *
-     * @ORM\Column(name="number", type="integer", nullable=false)
+     * @ORM\Column(name="number", type="string", length=10, nullable=false)
      */
     private $number;
 
@@ -57,12 +64,24 @@ class Purchase
         return $this->id;
     }
 
-    public function getNumber(): ?int
+    public function getPurchaseAt(): ?\DateTime
+    {
+        return $this->purchaseAt;
+    }
+
+    public function setPurchaseAt(\DateTime $purchaseAt): self
+    {
+        $this->purchaseAt = $purchaseAt;
+
+        return $this;
+    }
+
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    public function setNumber(int $number): self
+    public function setNumber(string $number): self
     {
         $this->number = $number;
 
