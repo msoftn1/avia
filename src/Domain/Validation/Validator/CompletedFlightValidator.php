@@ -4,36 +4,57 @@ namespace App\Domain\Validation\Validator;
 use App\Domain\Validation\ValidatorInterface;
 use App\Domain\Validation\ValidatorResult;
 
+/**
+ * Валидатор для метода заврешния продажи билетов на рейс.
+ */
 class CompletedFlightValidator implements ValidatorInterface
 {
+    /** @var mixed Идентификатор полета. */
     private $flightId;
+
+    /** @var mixed Секретный ключ. */
     private $secretKey;
 
+    /** @var string Ключ проверки. */
     private string $checkKey;
 
+    /**
+     * Конструктор.
+     *
+     * @param $flightId
+     * @param $secretKey
+     */
     public function __construct($flightId, $secretKey)
     {
-        $this->flightId = $flightId;
+        $this->flightId  = $flightId;
         $this->secretKey = $secretKey;
     }
 
-    public function setCheckKey($checkKey)
+    /**
+     * Установить ключ проверки.
+     *
+     * @param string $checkKey
+     */
+    public function setCheckKey(string $checkKey)
     {
         $this->checkKey = $checkKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function validate(): ValidatorResult
     {
         $success = true;
-        $reason = '';
+        $reason  = '';
 
         if($this->secretKey !== $this->checkKey) {
             $success = false;
-            $reason = '{secret_key} указан не корректный';
+            $reason  = '{secret_key} указан не корректный';
         }
         elseif((int)$this->flightId <= 0) {
             $success = false;
-            $reason = '{flight_id} должно быть числом больше нуля';
+            $reason  = '{flight_id} должно быть числом больше нуля';
         }
 
         return new ValidatorResult($success, $reason);

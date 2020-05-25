@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flight
+ * Entity рейса.
  *
  * @ORM\Table(name="flight")
  * @ORM\Entity
@@ -13,73 +13,92 @@ use Doctrine\ORM\Mapping as ORM;
 class Flight
 {
     /**
-     * @var int
+     * Идентификатор.
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
+     * Название рейса.
+     *
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var \DateTime
+     * Дата добавления рейса.
      *
      * @ORM\Column(name="added_at", type="datetime", nullable=false)
      */
     private $addedAt;
 
     /**
-     * @var \DateTime
+     * Дата рейса.
      *
      * @ORM\Column(name="flight_at", type="datetime", nullable=false)
      */
-    private $flightAt;
+    private \DateTimeInterface $flightAt;
 
     /**
-     * @var bool
+     * Продажи завершены.
      *
      * @ORM\Column(name="is_sales_completed", type="boolean", nullable=false)
      */
-    private $isSalesCompleted = false;
+    private bool $isSalesCompleted = false;
 
     /**
-     * @var \DateTime|null
+     * Дата завершения продаж.
      *
      * @ORM\Column(name="completion_at", type="datetime", nullable=true)
      */
-    private $completionAt;
+    private ?\DateTimeInterface $completionAt;
 
     /**
-     * @var bool
+     * Рейс отменен.
      *
      * @ORM\Column(name="is_canceled", type="boolean", nullable=false)
      */
     private $isCanceled = false;
 
     /**
-     * @var \DateTime|null
+     * Дата отмены рейса.
      *
      * @ORM\Column(name="cancellation_at", type="datetime", nullable=true)
      */
-    private $cancellationAt;
+    private ?\DateTimeInterface $cancellationAt;
 
-    public function getId(): ?int
+    /**
+     * Получить идентификатор.
+     *
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    /**
+     * Получить название рейса.
+     *
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * Установить название рейса.
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -87,11 +106,23 @@ class Flight
         return $this;
     }
 
-    public function getAddedAt(): ?\DateTimeInterface
+    /**
+     * Получить дату добавления.
+     *
+     * @return \DateTimeInterface
+     */
+    public function getAddedAt(): \DateTimeInterface
     {
         return $this->addedAt;
     }
 
+    /**
+     * Установить дату добавления.
+     *
+     * @param \DateTimeInterface $addedAt
+     *
+     * @return $this
+     */
     public function setAddedAt(\DateTimeInterface $addedAt): self
     {
         $this->addedAt = $addedAt;
@@ -99,11 +130,23 @@ class Flight
         return $this;
     }
 
-    public function getFlightAt(): ?\DateTimeInterface
+    /**
+     * Получить дату рейса.
+     *
+     * @return \DateTimeInterface
+     */
+    public function getFlightAt(): \DateTimeInterface
     {
         return $this->flightAt;
     }
 
+    /**
+     * Установить дату рейса.
+     *
+     * @param \DateTimeInterface $flightAt
+     *
+     * @return $this
+     */
     public function setFlightAt(\DateTimeInterface $flightAt): self
     {
         $this->flightAt = $flightAt;
@@ -111,11 +154,23 @@ class Flight
         return $this;
     }
 
-    public function getIsSalesCompleted(): ?bool
+    /**
+     * Получить признак завершения продаж.
+     *
+     * @return bool
+     */
+    public function getIsSalesCompleted(): bool
     {
         return $this->isSalesCompleted;
     }
 
+    /**
+     * Установить признак завершения продаж.
+     *
+     * @param bool $isSalesCompleted
+     *
+     * @return $this
+     */
     public function setIsSalesCompleted(bool $isSalesCompleted): self
     {
         $this->isSalesCompleted = $isSalesCompleted;
@@ -123,11 +178,23 @@ class Flight
         return $this;
     }
 
+    /**
+     * Получить дату завершения продаж билетов на рейс.
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getCompletionAt(): ?\DateTimeInterface
     {
         return $this->completionAt;
     }
 
+    /**
+     * Установить дату завершения продаж билетов на рейс.
+     *
+     * @param \DateTimeInterface|null $completionAt
+     *
+     * @return $this
+     */
     public function setCompletionAt(?\DateTimeInterface $completionAt): self
     {
         $this->completionAt = $completionAt;
@@ -135,11 +202,23 @@ class Flight
         return $this;
     }
 
-    public function getIsCanceled(): ?bool
+    /**
+     * Получить признак отмены рейса.
+     *
+     * @return bool
+     */
+    public function getIsCanceled(): bool
     {
         return $this->isCanceled;
     }
 
+    /**
+     * Установить признак отмены рейса.
+     *
+     * @param bool $isCanceled
+     *
+     * @return $this
+     */
     public function setIsCanceled(bool $isCanceled): self
     {
         $this->isCanceled = $isCanceled;
@@ -147,17 +226,27 @@ class Flight
         return $this;
     }
 
+    /**
+     * Получить дату отмены рейса.
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getCancellationAt(): ?\DateTimeInterface
     {
         return $this->cancellationAt;
     }
 
+    /**
+     * Установить дату отмены рейса.
+     *
+     * @param \DateTimeInterface|null $cancellationAt
+     *
+     * @return $this
+     */
     public function setCancellationAt(?\DateTimeInterface $cancellationAt): self
     {
         $this->cancellationAt = $cancellationAt;
 
         return $this;
     }
-
-
 }

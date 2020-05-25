@@ -1,14 +1,21 @@
 <?php
 namespace App\Domain\DTO\Response;
 
+/**
+ * DTO результата ошибки.
+ */
 class Error implements ResponseInterface
 {
+    /** Статус. */
     private int $status;
+
+    /** Причина. */
     private string $reason;
 
     /**
-     * Error constructor.
-     * @param int $status
+     * Конструктор.
+     *
+     * @param int    $status
      * @param string $reason
      */
     public function __construct(int $status, string $reason)
@@ -17,6 +24,9 @@ class Error implements ResponseInterface
         $this->reason = $reason;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         return [

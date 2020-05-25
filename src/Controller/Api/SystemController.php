@@ -8,7 +8,6 @@ use App\Domain\Validation\Validator\AddFlightValidator;
 use App\Domain\Validation\Validator\CompletedFlightValidator;
 use App\Domain\Validation\Validator\СanceledFlightValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,13 +18,22 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class SystemController extends AbstractController
 {
+    /** Менеджер рейсов. */
     private FlightManager $flightManager;
+
+    /** Ключ API. */
     private string $apiKey;
 
+    /**
+     * Конструктор.
+     *
+     * @param FlightManager      $flightManager
+     * @param ContainerInterface $container
+     */
     public function __construct(FlightManager $flightManager, ContainerInterface $container)
     {
         $this->flightManager = $flightManager;
-        $this->apiKey = $container->getParameter("api_key");
+        $this->apiKey        = $container->getParameter("api_key");
     }
 
     /**
@@ -39,7 +47,7 @@ class SystemController extends AbstractController
      */
     public function add(Request $request): Response
     {
-        $name = $request->get("name");
+        $name     = $request->get("name");
         $flightAt = $request->get("flight_at");
 
         $validator = new AddFlightValidator(

@@ -1,15 +1,17 @@
 <?php
-
-
 namespace App\Domain\DTO\Response;
 
-
+/**
+ * DTO результата завершения продажи билетов на рейс.
+ */
 class CompletedFlight implements ResponseInterface
 {
+    /** Статус. */
     private int $status;
 
     /**
-     * CompletedFlight constructor.
+     * Конструктор.
+     *
      * @param int $status
      */
     public function __construct(int $status)
@@ -17,6 +19,9 @@ class CompletedFlight implements ResponseInterface
         $this->status = $status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         return [

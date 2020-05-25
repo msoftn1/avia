@@ -2,8 +2,6 @@
 
 namespace App\Domain\Manager;
 
-
-use App\Domain\DTO\Rating;
 use App\Domain\DTO\Response\AddFlight;
 use App\Domain\DTO\Response\CanceledFlight;
 use App\Domain\DTO\Response\CancelReservation;
@@ -21,17 +19,35 @@ use App\Util\Random;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * Менеджер рейсов.
+ */
 class FlightManager
 {
+    /** Менеджер сущностей. */
     private EntityManagerInterface $entityManager;
 
+    /** Максимальное количество мест на рейсе. */
     const MAXIMUM_SEATS = 150;
 
+    /**
+     * Конструктор.
+     *
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * Добавить рейс.
+     *
+     * @param string $name
+     * @param \DateTime $flightAt
+     *
+     * @return ResponseInterface
+     */
     public function add(string $name, \DateTime $flightAt): ResponseInterface
     {
         $flight = new Flight();
@@ -45,6 +61,13 @@ class FlightManager
         return new AddFlight(200, $flight->getId());
     }
 
+    /**
+     * Завершена продажа билетов на рейс.
+     *
+     * @param int $flightId
+     *
+     * @return ResponseInterface
+     */
     public function completed(int $flightId): ResponseInterface
     {
         /** @var Flight $flight */
@@ -71,6 +94,13 @@ class FlightManager
         return new CompletedFlight(200);
     }
 
+    /**
+     * Рейс отменен.
+     *
+     * @param int $flightId
+     *
+     * @return ResponseInterface
+     */
     public function canceled(int $flightId): ResponseInterface
     {
         /** @var Flight $flight */
@@ -97,7 +127,15 @@ class FlightManager
         return new CanceledFlight(200);
     }
 
-    public function toBook(int $flightId, string $email, string $callbackUrl): ResponseInterface
+    /**
+     * Забронировать место на рейс.
+     *
+     * @param int $flightId
+     * @param string $email
+     *
+     * @return ResponseInterface
+     */
+    public function toBook(int $flightId, string $email): ResponseInterface
     {
         /** @var Flight $flight */
         $flight = $this->entityManager->find(Flight::class, $flightId);
@@ -120,7 +158,6 @@ class FlightManager
         $reservation->setFlight($flight);
         $reservation->setEmail($email);
         $reservation->setReservationAt(new \DateTime("NOW"));
-        $reservation->setCallbackUrl($callbackUrl);
         $reservation->setNumber(Random::generateRandomString(10));
         $reservation->setSeat($seatNumber);
 
@@ -130,6 +167,13 @@ class FlightManager
         return new ToBookFlight(200, $reservation->getNumber(), $reservation->getSeat());
     }
 
+    /**
+     * Отменить бронь.
+     *
+     * @param string $number
+     *
+     * @return ResponseInterface
+     */
     public function cancelReservation(string $number): ResponseInterface
     {
         /** @var Reservation $reservation */
@@ -155,7 +199,16 @@ class FlightManager
         return new CancelReservation(200);
     }
 
-    public function ticketBuy(?string $number, int $flightId, string $email, string $callbackUrl): ResponseInterface
+    /**
+     * Купить билет.
+     *
+     * @param string|null $number
+     * @param int $flightId
+     * @param string $email
+     *
+     * @return ResponseInterface
+     */
+    public function ticketBuy(?string $number, int $flightId, string $email): ResponseInterface
     {
         $reservation = null;
 
@@ -183,7 +236,7 @@ class FlightManager
         }
 
         if(!$reservation) {
-            $ret = $this->toBook($flightId, $email, $callbackUrl);
+            $ret = $this->toBook($flightId, $email);
 
             if($ret instanceof Error) {
                 return $ret;
@@ -205,6 +258,13 @@ class FlightManager
         return new TicketBuy(200, $purchase->getNumber(), $reservation->getSeat());
     }
 
+    /**
+     * Вернуть билет.
+     *
+     * @param string $number
+     *
+     * @return ResponseInterface
+     */
     public function ticketReturn(string $number): ResponseInterface
     {
         /** @var Purchase $purchase */
@@ -227,11 +287,17 @@ class FlightManager
         return new TicketReturn(200);
     }
 
+    /**
+     * Получить рандомное место на рейсе.
+     *
+     * @return int
+     * @throws \Exception
+     */
     private function getRandomSeatNumber()
     {
         /** @var EntityRepository $repository */
         $repository = $this->entityManager->getRepository(Reservation::class);
-        $seatList = $repository->createQueryBuilder("r")
+        $seatList   = $repository->createQueryBuilder("r")
             ->select("r.seat")
             ->getQuery()
             ->getArrayResult();

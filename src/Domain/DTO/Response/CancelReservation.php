@@ -1,15 +1,17 @@
 <?php
-
-
 namespace App\Domain\DTO\Response;
 
-
+/**
+ * DTO результата отмены брони.
+ */
 class CancelReservation implements ResponseInterface
 {
+    /** Статус. */
     private int $status;
 
     /**
-     * CancelReservation constructor.
+     * Конструктор.
+     *
      * @param int $status
      */
     public function __construct(int $status)
@@ -17,6 +19,9 @@ class CancelReservation implements ResponseInterface
         $this->status = $status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         return [

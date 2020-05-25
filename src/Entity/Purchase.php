@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Purchase
+ * Entity покупки билета.
  *
  * @ORM\Table(name="purchase", indexes={@ORM\Index(name="purchase_number", columns={"number"}), @ORM\Index(name="purchase_reservation_id", columns={"reservation_id"})})
  * @ORM\Entity
@@ -13,74 +13,103 @@ use Doctrine\ORM\Mapping as ORM;
 class Purchase
 {
     /**
-     * @var int
+     * Идентификатор покупки.
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var \DateTime
+     * Дата покупки.
      *
      * @ORM\Column(name="purchase_at", type="datetime", nullable=false)
      */
-    private $purchaseAt;
+    private \DateTimeInterface $purchaseAt;
 
     /**
-     * @var int
+     * Номер бронирования.
      *
      * @ORM\Column(name="number", type="string", length=10, nullable=false)
      */
-    private $number;
+    private string $number;
 
     /**
-     * @var bool
+     * Признак возврата билета.
      *
      * @ORM\Column(name="is_returned", type="boolean", nullable=false)
      */
-    private $isReturned = false;
+    private bool $isReturned = false;
 
     /**
-     * @var \DateTime|null
+     * Дата возврата билета.
      *
      * @ORM\Column(name="return_at", type="datetime", nullable=true)
      */
-    private $returnAt;
+    private ?\DateTimeInterface $returnAt;
 
     /**
-     * @var \Reservation
+     * Бронь.
      *
      * @ORM\ManyToOne(targetEntity="Reservation")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
      * })
      */
-    private $reservation;
+    private Reservation $reservation;
 
-    public function getId(): ?int
+    /**
+     * Получить идентификатор.
+     *
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getPurchaseAt(): ?\DateTime
+    /**
+     * Получить дату покупки.
+     *
+     * @return \DateTime
+     */
+    public function getPurchaseAt(): \DateTimeInterface
     {
         return $this->purchaseAt;
     }
 
-    public function setPurchaseAt(\DateTime $purchaseAt): self
+    /**
+     * Установить дату покупки.
+     *
+     * @param \DateTimeInterface $purchaseAt
+     *
+     * @return $this
+     */
+    public function setPurchaseAt(\DateTimeInterface $purchaseAt): self
     {
         $this->purchaseAt = $purchaseAt;
 
         return $this;
     }
 
-    public function getNumber(): ?string
+    /**
+     * Получить номер брони.
+     *
+     * @return string
+     */
+    public function getNumber(): string
     {
         return $this->number;
     }
 
+    /**
+     * Установить номер брони.
+     *
+     * @param string $number
+     *
+     * @return $this
+     */
     public function setNumber(string $number): self
     {
         $this->number = $number;
@@ -88,11 +117,23 @@ class Purchase
         return $this;
     }
 
-    public function getIsReturned(): ?bool
+    /**
+     * Получить признак возврата билета.
+     *
+     * @return bool
+     */
+    public function getIsReturned(): bool
     {
         return $this->isReturned;
     }
 
+    /**
+     * Установить признак возврата билета.
+     *
+     * @param bool $isReturned
+     *
+     * @return $this
+     */
     public function setIsReturned(bool $isReturned): self
     {
         $this->isReturned = $isReturned;
@@ -100,11 +141,23 @@ class Purchase
         return $this;
     }
 
+    /**
+     * Получить дату возврата билета.
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getReturnAt(): ?\DateTimeInterface
     {
         return $this->returnAt;
     }
 
+    /**
+     * Установить дату возврата билета.
+     *
+     * @param \DateTimeInterface|null $returnAt
+     *
+     * @return $this
+     */
     public function setReturnAt(?\DateTimeInterface $returnAt): self
     {
         $this->returnAt = $returnAt;
@@ -112,17 +165,27 @@ class Purchase
         return $this;
     }
 
-    public function getReservation(): ?Reservation
+    /**
+     * Получить бронь.
+     *
+     * @return Reservation
+     */
+    public function getReservation(): Reservation
     {
         return $this->reservation;
     }
 
-    public function setReservation(?Reservation $reservation): self
+    /**
+     * Установить бронь.
+     *
+     * @param Reservation $reservation
+     *
+     * @return $this
+     */
+    public function setReservation(Reservation $reservation): self
     {
         $this->reservation = $reservation;
 
         return $this;
     }
-
-
 }

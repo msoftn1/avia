@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Notification
+ * Entity уведомления.
  *
  * @ORM\Table(name="notification", indexes={@ORM\Index(name="notification_event_id_index", columns={"event_id"}), @ORM\Index(name="notification_reservation_id_index", columns={"reservation_id"})})
  * @ORM\Entity
@@ -13,86 +13,82 @@ use Doctrine\ORM\Mapping as ORM;
 class Notification
 {
     /**
-     * @var int
+     * Идентификатор уведомления.
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var \DateTime
+     * Дата добавления уведомления.
      *
      * @ORM\Column(name="added_at", type="datetime", nullable=false)
      */
-    private $addedAt;
+    private \DateTimeInterface $addedAt;
 
     /**
-     * @var bool
+     * Признак обработки уведомления.
      *
      * @ORM\Column(name="is_processed", type="boolean", nullable=false)
      */
-    private $isProcessed = false;
+    private bool $isProcessed = false;
 
     /**
-     * @var \DateTime|null
+     * Дата обработки уведомления.
      *
      * @ORM\Column(name="processed_at", type="datetime", nullable=true)
      */
-    private $processedAt;
+    private ?\DateTimeInterface $processedAt;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="last_attempt_at", type="datetime", nullable=true)
-     */
-    private $lastAttemptAt;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="last_response_code", type="integer", nullable=true)
-     */
-    private $lastResponseCode;
-
-    /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="count_attempts", type="int", nullable=true)
-     */
-    private $countAttempts = 0;
-
-    /**
-     * @var \Event
+     * Событие.
      *
      * @ORM\ManyToOne(targetEntity="Event")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="event_id", referencedColumnName="id")
      * })
      */
-    private $event;
+    private Event $event;
 
     /**
-     * @var \Reservation
+     * Бронирование.
      *
      * @ORM\ManyToOne(targetEntity="Reservation")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
      * })
      */
-    private $reservation;
+    private Reservation $reservation;
 
-    public function getId(): ?int
+    /**
+     * Получить идентификатор.
+     *
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getAddedAt(): ?\DateTimeInterface
+    /**
+     * Получить дату добавления.
+     *
+     * @return \DateTimeInterface
+     */
+    public function getAddedAt(): \DateTimeInterface
     {
         return $this->addedAt;
     }
 
+    /**
+     * Установить дату добавления.
+     *
+     * @param \DateTimeInterface $addedAt
+     *
+     * @return $this
+     */
     public function setAddedAt(\DateTimeInterface $addedAt): self
     {
         $this->addedAt = $addedAt;
@@ -100,11 +96,23 @@ class Notification
         return $this;
     }
 
-    public function getIsProcessed(): ?bool
+    /**
+     * Получить признак обработки уведомления.
+     *
+     * @return bool
+     */
+    public function getIsProcessed(): bool
     {
         return $this->isProcessed;
     }
 
+    /**
+     * Установить признак обработки уведомления.
+     *
+     * @param bool $isProcessed
+     *
+     * @return $this
+     */
     public function setIsProcessed(bool $isProcessed): self
     {
         $this->isProcessed = $isProcessed;
@@ -112,11 +120,23 @@ class Notification
         return $this;
     }
 
+    /**
+     * Получить дату обработки уведомления.
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getProcessedAt(): ?\DateTimeInterface
     {
         return $this->processedAt;
     }
 
+    /**
+     * Установить дату обработки уведомления.
+     *
+     * @param \DateTimeInterface|null $processedAt
+     *
+     * @return $this
+     */
     public function setProcessedAt(?\DateTimeInterface $processedAt): self
     {
         $this->processedAt = $processedAt;
@@ -124,65 +144,51 @@ class Notification
         return $this;
     }
 
-    public function getLastAttemptAt(): ?\DateTimeInterface
-    {
-        return $this->lastAttemptAt;
-    }
-
-    public function setLastAttemptAt(?\DateTimeInterface $lastAttemptAt): self
-    {
-        $this->lastAttemptAt = $lastAttemptAt;
-
-        return $this;
-    }
-
-    public function getLastResponseCode(): ?int
-    {
-        return $this->lastResponseCode;
-    }
-
-    public function setLastResponseCode(?int $lastResponseCode): self
-    {
-        $this->lastResponseCode = $lastResponseCode;
-
-        return $this;
-    }
-
-    public function getCountAttempts()
-    {
-        return $this->countAttempts;
-    }
-
-    public function setCountAttempts($countAttempts): self
-    {
-        $this->countAttempts = $countAttempts;
-
-        return $this;
-    }
-
-    public function getEvent(): ?Event
+    /**
+     * Получить событие.
+     *
+     * @return Event
+     */
+    public function getEvent(): Event
     {
         return $this->event;
     }
 
-    public function setEvent(?Event $event): self
+    /**
+     * Установить событие.
+     *
+     * @param Event $event
+     *
+     * @return $this
+     */
+    public function setEvent(Event $event): self
     {
         $this->event = $event;
 
         return $this;
     }
 
-    public function getReservation(): ?Reservation
+    /**
+     * Получить бронь.
+     *
+     * @return Reservation
+     */
+    public function getReservation(): Reservation
     {
         return $this->reservation;
     }
 
-    public function setReservation(?Reservation $reservation): self
+    /**
+     * Установить бронь.
+     *
+     * @param Reservation $reservation
+     *
+     * @return $this
+     */
+    public function setReservation(Reservation $reservation): self
     {
         $this->reservation = $reservation;
 
         return $this;
     }
-
-
 }

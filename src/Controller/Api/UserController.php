@@ -4,16 +4,11 @@ namespace App\Controller\Api;
 
 use App\Domain\DTO\Response\Error;
 use App\Domain\Manager\FlightManager;
-use App\Domain\Validation\Validator\AddFlightValidator;
-use App\Domain\Validation\Validator\CompletedFlightValidator;
 use App\Domain\Validation\Validator\TicketBuyValidator;
 use App\Domain\Validation\Validator\TicketReturnValidator;
 use App\Domain\Validation\Validator\ToBookFlightValidator;
-use App\Domain\Validation\Validator\СanceledFlightValidator;
 use App\Domain\Validation\Validator\СancelReservationValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserController extends AbstractController
 {
+    /** Менеджер рейсов. */
     private FlightManager $flightManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param FlightManager $flightManager
+     */
     public function __construct(FlightManager $flightManager)
     {
         $this->flightManager = $flightManager;
@@ -42,21 +43,16 @@ class UserController extends AbstractController
     public function toBook(Request $request): Response
     {
         $flightId = $request->get("flight_id");
-        $email = $request->get("email");
-        $callbackUrl = $request->get("callback_url");
+        $email    = $request->get("email");
 
-        $validator = new ToBookFlightValidator(
-            $flightId,
-            $email,
-            $callbackUrl
-        );
+        $validator = new ToBookFlightValidator($flightId, $email);
 
         $validatorResult = $validator->validate();
 
         if (!$validatorResult->isSuccess()) {
             $ret = new Error(400, $validatorResult->getReason());
         } else {
-            $ret = $this->flightManager->toBook($flightId, $email, $callbackUrl);
+            $ret = $this->flightManager->toBook($flightId, $email);
         }
 
         $response = new Response(\json_encode($ret->toArray()));
@@ -77,6 +73,7 @@ class UserController extends AbstractController
     public function cancelReservation(Request $request): Response
     {
         $number = $request->get("number");
+
         $validator = new СancelReservationValidator($number);
 
         $validatorResult = $validator->validate();
@@ -104,19 +101,18 @@ class UserController extends AbstractController
      */
     public function ticketBuy(Request $request): Response
     {
-        $number = $request->get("number");
+        $number   = $request->get("number");
         $flightId = $request->get("flight_id");
-        $email = $request->get("email");
-        $callbackUrl = $request->get("callback_url");
+        $email    = $request->get("email");
 
-        $validator = new TicketBuyValidator($number, $flightId, $email, $callbackUrl);
+        $validator = new TicketBuyValidator($number, $flightId, $email);
 
         $validatorResult = $validator->validate();
 
         if (!$validatorResult->isSuccess()) {
             $ret = new Error(400, $validatorResult->getReason());
         } else {
-            $ret = $this->flightManager->ticketBuy($number, $flightId, $email, $callbackUrl);
+            $ret = $this->flightManager->ticketBuy($number, $flightId, $email);
         }
 
         $response = new Response(\json_encode($ret->toArray()));
@@ -136,7 +132,7 @@ class UserController extends AbstractController
      */
     public function ticketReturn(Request $request): Response
     {
-        $number = $request->get("number");
+        $number    = $request->get("number");
         $validator = new TicketReturnValidator($number);
 
         $validatorResult = $validator->validate();
